@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.diogo.buyeasy.entities.Category;
 import com.diogo.buyeasy.entities.Order;
 import com.diogo.buyeasy.entities.OrderItem;
+import com.diogo.buyeasy.entities.Payment;
 import com.diogo.buyeasy.entities.Product;
 import com.diogo.buyeasy.entities.User;
 import com.diogo.buyeasy.entities.enums.OrderStatus;
@@ -81,7 +82,10 @@ public class TestConfig implements CommandLineRunner{
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 		
-	}
-	
-	
+		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
+		o1.setPayment(pay1);
+		
+		orderRepository.save(o1);
+		
+	}	
 }
