@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.diogo.buyeasy.entities.User;
 import com.diogo.buyeasy.repositories.UserRepository;
+import com.diogo.buyeasy.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -22,7 +23,7 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public User insert(User obj) {
