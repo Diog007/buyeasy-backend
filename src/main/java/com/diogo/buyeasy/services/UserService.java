@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.diogo.buyeasy.entities.User;
 import com.diogo.buyeasy.repositories.UserRepository;
+import com.diogo.buyeasy.services.exceptions.DatabaseException;
 import com.diogo.buyeasy.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -31,8 +33,17 @@ public class UserService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
-	}
+		Optional<User> user = repository.findById(id);
+		if (user.isPresent()) {
+			try {
+				repository.deleteById(id);
+			} catch (DataIntegrityViolationException e) {
+				throw new DatabaseException(e.getMessage());
+			}
+		} else {
+			throw new ResourceNotFoundException(id);
+		}
+	} 
 	
 	public User update(Long id, User obj) {
 		User entity = findById(id);
